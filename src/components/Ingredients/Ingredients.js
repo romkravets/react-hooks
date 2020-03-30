@@ -31,7 +31,7 @@ const httpReducer = (curHttpState, action) => {
       default:
         throw new Error('Should not be reached!');
   }
-}
+};
 
 
 const Ingredients = () => {
