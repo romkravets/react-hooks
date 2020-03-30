@@ -50,10 +50,10 @@ const Ingredients = () => {
     dispatch({type: 'SET', ingredients: filteredIngredients});
   }, []);
 
-  const addIngredientHandler = ingredient => {
+  const addIngredientHandler = useCallback(ingredient => {
     //setIsLoading(true);
     dispatchHttp({type: 'SEND'});
-    fetch('https://react-hooks-b5812.firebaseio.com/ingredients.jon', {
+    fetch('https://react-hooks-b5812.firebaseio.com/ingredients.json', {
       method: 'POST',
       body: JSON.stringify(ingredient),
       headers: { 'Content-Type': 'application/json' }
@@ -75,26 +75,26 @@ const Ingredients = () => {
         // setIsLoading(false);
         dispatchHttp({type: 'RESPONSE'});
       });
-  };
+  }, []);
 
-  const removeIngredientHandler = ingredientId => {
-    // setIsLoading(true);
-    dispatchHttp({type: 'SEND'});
-    fetch(`https://react-hooks-b5812.firebaseio.com/ingredients/${ingredientId}.json`,
-    {
-      method: 'DELETE',
-    }
-    ).then( response => {
-      // setIsLoading(false);
-      // setUserIngredients(prevIngredients =>
-      //   prevIngredients.filter(ingredient => ingredient.id !== ingredientId)
-      // );
-      dispatchHttp({type: 'RESPONSE'});
-      dispatch({type: 'DELETE', id: ingredientId});
-    }).catch(error => {
-      dispatchHttp({type: 'ERROR', errorMessage: error.message});
-  });
-}
+  const removeIngredientHandler = useCallback(ingredientId => {
+      // setIsLoading(true);
+      dispatchHttp({type: 'SEND'});
+      fetch(`https://react-hooks-b5812.firebaseio.com/ingredients/${ingredientId}.json`,
+      {
+        method: 'DELETE',
+      }
+      ).then( response => {
+        // setIsLoading(false);
+        // setUserIngredients(prevIngredients =>
+        //   prevIngredients.filter(ingredient => ingredient.id !== ingredientId)
+        // );
+        dispatchHttp({type: 'RESPONSE'});
+        dispatch({type: 'DELETE', id: ingredientId});
+      }).catch(error => {
+        dispatchHttp({type: 'ERROR', errorMessage: error.message});
+    });
+  }, []);
 
   const clearError = () => {
     // setError(null);
@@ -104,6 +104,7 @@ const Ingredients = () => {
   return (
     <div className="App">
       {httpState.error && <ErrorModal onClose={clearError}>{httpState.error}</ErrorModal>}
+
       <IngredientForm onAddIngredient={addIngredientHandler}
       loading={httpState.loading}
       />
